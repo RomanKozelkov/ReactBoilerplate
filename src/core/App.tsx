@@ -3,6 +3,7 @@ import {Provider} from 'react-redux';
 import {store, history} from "../redux/store";
 import {Route} from 'react-router';
 import {ConnectedRouter} from 'react-router-redux';
+require('../../scss/_custom.scss');
 
 interface MainPageProps {
 }
