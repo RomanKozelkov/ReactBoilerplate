@@ -6,7 +6,7 @@ import {ConnectedRouter} from 'react-router-redux';
 import {Header} from "../components/header/header";
 import {MainPage} from "../pages/MainPage";
 
-require('../../scss/core_styles.scss');
+require('../../global_style/core_styles.scss');
 
 class App extends React.Component {
 	render() {

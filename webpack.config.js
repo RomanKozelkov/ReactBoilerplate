@@ -16,11 +16,11 @@ module.exports = {
 	},
 	plugins: [
 		new CopyWebpackPlugin([
-			{ from: './node_modules/react/umd/react.development.js', to: 'libs/react.js'},
-			{ from: './node_modules/react-dom/umd/react-dom.development.js', to: 'libs/react-dom.js'},
-			{ from: './node_modules/redux/dist/redux.js', to: 'libs/redux.js'},
-			{ from: './node_modules/react-redux/dist/react-redux.js', to: 'libs/react-redux.js'},
-			{ from: './node_modules/font-awesome/css/font-awesome.css', to: 'css/font-awesome.css'}
+			{from: './node_modules/react/umd/react.development.js', to: 'libs/react.js'},
+			{from: './node_modules/react-dom/umd/react-dom.development.js', to: 'libs/react-dom.js'},
+			{from: './node_modules/redux/dist/redux.js', to: 'libs/redux.js'},
+			{from: './node_modules/react-redux/dist/react-redux.js', to: 'libs/react-redux.js'},
+			{from: './node_modules/font-awesome/css/font-awesome.css', to: 'css/font-awesome.css'}
 		]),
 		new HtmlWebpackPlugin({
 			title: 'Task Manager',
@@ -29,13 +29,15 @@ module.exports = {
 			template: 'index.template.html',
 			chunksSortMode: 'dependency'
 		}),
-		new HtmlWebpackIncludeAssetsPlugin({ assets: [
-			"libs/react.js",
-			"libs/react-dom.js",
-			"libs/redux.js",
-			"libs/react-redux.js",
-			"css/font-awesome.css"
-		], append: false }),
+		new HtmlWebpackIncludeAssetsPlugin({
+			assets: [
+				"libs/react.js",
+				"libs/react-dom.js",
+				"libs/redux.js",
+				"libs/react-redux.js",
+				"css/font-awesome.css"
+			], append: false
+		}),
 		// HOT MODULE REPLACEMENT
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
@@ -61,7 +63,33 @@ module.exports = {
 				}
 			},
 			{
-				test: /\.(scss)$/,
+				test: /\.(scss|css)$/,
+				exclude: /node_modules|global_style/,
+				use: [{
+					loader: 'style-loader', // inject CSS to page
+				}, {
+					loader: 'css-loader', // translates CSS into CommonJS modules
+					options: {
+						modules: true,
+						localIdentName: '[name]__[local]'
+					}
+				}, {
+					loader: 'postcss-loader', // Run post css actions
+					options: {
+						plugins: function () {
+							return [
+								require('autoprefixer')
+							];
+						}
+					}
+				}, {
+					loader: 'sass-loader',
+					options: {					}
+				}]
+			},
+			{
+				test: /\.(scss|css)$/,
+				include: /node_modules|global_style/,
 				use: [{
 					loader: 'style-loader', // inject CSS to page
 				}, {
@@ -69,15 +97,14 @@ module.exports = {
 				}, {
 					loader: 'postcss-loader', // Run post css actions
 					options: {
-						plugins: function () { // post css plugins, can be exported to postcss.config.js
+						plugins: function () {
 							return [
-								require('precss'),
 								require('autoprefixer')
 							];
 						}
 					}
 				}, {
-					loader: 'sass-loader' // compiles Sass to CSS
+					loader: 'sass-loader'
 				}]
 			}
 		]
